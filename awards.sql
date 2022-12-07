@@ -86,3 +86,19 @@ AND pitching.g > 9
 ORDER BY ROUND(salaries.salary /  pitching.g) DESC;
 
 
+--Bean Machine (min 100 batters faced) *Winner Alberto Castillo @ 5.79% 
+
+SELECT
+	people.namefirst,
+    people.namelast,
+    SUM(pitching.hbp) AS batters_hit,
+    SUM(pitching.bfp) AS batters_faced,
+    pitching.playerid, 
+    (CAST (SUM(pitching.hbp) AS float) / CAST (SUM(pitching.bfp) AS float)) * 100 AS percent_hit
+FROM pitching
+JOIN people
+	ON pitching.playerid = people.playerid
+WHERE pitching.hbp IS NOT NULL
+  AND pitching.bfp > 100
+GROUP BY pitching.playerid, people.namefirst, people.namelast
+ORDER BY 6 DESC;
